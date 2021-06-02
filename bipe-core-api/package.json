@@ -1,6 +1,6 @@
 {
   "name": "bipe-core-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "API Core da aplicação Bipe.",
   "main": "server.js",
   "scripts": {
