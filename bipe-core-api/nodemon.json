@@ -1,0 +1,3 @@
+{   
+    "ignore": ["node_modules", "lib/*.js", "README", "README.*", "package.json", "package-lock.json", "swagger.json"] 
+}
