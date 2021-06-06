@@ -1,0 +1,32 @@
+version: "3"
+services:
+    bipe-web:
+        image: "node:alpine"
+        container_name: "bipe-web"
+        environment:
+            - HOST=0.0.0.0
+            - PORT=5000
+            - CHOKIDAR_USEPOLLING=true
+        ports: 
+            - "5000:5000"
+        command: >
+            /bin/sh -c "
+                cd /root;
+                npm install;
+                npm start
+            "
+        volumes:
+            - "./bipe-web/:/root/"
+    bipe-core-api:
+        image: "node:alpine"
+        container_name: "bipe-core-api"
+        ports: 
+            - "3000:3000"
+        command: >
+            /bin/sh -c "
+                cd /root;
+                npm install;
+                npm start
+            "
+        volumes:
+            - "./bipe-core-api/:/root/"

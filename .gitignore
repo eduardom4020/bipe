@@ -108,3 +108,8 @@ dist
 
 **/package-lock.json
 **/swagger.json
+
+.config
+.npm
+**/.config
+**/.npm
