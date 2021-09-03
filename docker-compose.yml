@@ -30,3 +30,12 @@ services:
             "
         volumes:
             - "./bipe-core-api/:/root/"
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_DB: bipe
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
