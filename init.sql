@@ -3,24 +3,111 @@
 CREATE SCHEMA public AUTHORIZATION "admin";
 
 COMMENT ON SCHEMA public IS 'standard public schema';
--- public.objective_answer definition
 
--- Drop table
+-- DROP SEQUENCE public.answers_id_seq;
 
--- DROP TABLE public.objective_answer;
-
-CREATE TABLE public.objective_answer (
-	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	html_content varchar(2000) NOT NULL,
-	CONSTRAINT answer_pk PRIMARY KEY (id)
-);
+CREATE SEQUENCE public.answers_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
 
 -- Permissions
 
-ALTER TABLE public.objective_answer OWNER TO "admin";
-GRANT ALL ON TABLE public.objective_answer TO admin;
+ALTER SEQUENCE public.answers_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.answers_id_seq TO admin;
 
+-- DROP SEQUENCE public.form_id_seq;
 
+CREATE SEQUENCE public.form_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.form_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.form_id_seq TO admin;
+
+-- DROP SEQUENCE public.grade_id_seq;
+
+CREATE SEQUENCE public.grade_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.grade_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.grade_id_seq TO admin;
+
+-- DROP SEQUENCE public.question_id_seq;
+
+CREATE SEQUENCE public.question_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.question_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.question_id_seq TO admin;
+
+-- DROP SEQUENCE public.question_type_id_seq;
+
+CREATE SEQUENCE public.question_type_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.question_type_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.question_type_id_seq TO admin;
+
+-- DROP SEQUENCE public.tier_id_seq;
+
+CREATE SEQUENCE public.tier_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.tier_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.tier_id_seq TO admin;
+
+-- DROP SEQUENCE public.user_id_seq;
+
+CREATE SEQUENCE public.user_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+
+-- Permissions
+
+ALTER SEQUENCE public.user_id_seq OWNER TO "admin";
+GRANT ALL ON SEQUENCE public.user_id_seq TO admin;
 -- public.form definition
 
 -- Drop table
@@ -39,27 +126,6 @@ ALTER TABLE public.form OWNER TO "admin";
 GRANT ALL ON TABLE public.form TO admin;
 
 
--- public."user" definition
-
--- Drop table
-
--- DROP TABLE public."user";
-
-CREATE TABLE public."user" (
-	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	username varchar(50) NOT NULL,
-	created_at date NULL DEFAULT now(),
-	"password" varchar(1000) NOT NULL,
-	is_active bool NOT NULL DEFAULT true,
-	CONSTRAINT user_pk PRIMARY KEY (id)
-);
-
--- Permissions
-
-ALTER TABLE public."user" OWNER TO "admin";
-GRANT ALL ON TABLE public."user" TO admin;
-
-
 -- public.grade definition
 
 -- Drop table
@@ -76,6 +142,25 @@ CREATE TABLE public.grade (
 
 ALTER TABLE public.grade OWNER TO "admin";
 GRANT ALL ON TABLE public.grade TO admin;
+
+
+-- public.objective_answer definition
+
+-- Drop table
+
+-- DROP TABLE public.objective_answer;
+
+CREATE TABLE public.objective_answer (
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	html_content varchar(2000) NOT NULL,
+	"label" varchar(50) NOT NULL,
+	CONSTRAINT answer_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.objective_answer OWNER TO "admin";
+GRANT ALL ON TABLE public.objective_answer TO admin;
 
 
 -- public.question_type definition
@@ -114,6 +199,27 @@ ALTER TABLE public.tier OWNER TO "admin";
 GRANT ALL ON TABLE public.tier TO admin;
 
 
+-- public."user" definition
+
+-- Drop table
+
+-- DROP TABLE public."user";
+
+CREATE TABLE public."user" (
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	username varchar(50) NOT NULL,
+	created_at date NULL DEFAULT now(),
+	"password" varchar(1000) NOT NULL,
+	is_active bool NOT NULL DEFAULT true,
+	CONSTRAINT user_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public."user" OWNER TO "admin";
+GRANT ALL ON TABLE public."user" TO admin;
+
+
 -- public.question definition
 
 -- Drop table
@@ -125,6 +231,7 @@ CREATE TABLE public.question (
 	html_content varchar(8000) NOT NULL,
 	type_id int4 NOT NULL,
 	max_points int4 NOT NULL DEFAULT 0,
+	"label" varchar(50) NOT NULL,
 	CONSTRAINT question_pk PRIMARY KEY (id),
 	CONSTRAINT question_fk FOREIGN KEY (type_id) REFERENCES public.question_type(id) ON DELETE SET NULL ON UPDATE SET NULL
 );
@@ -133,26 +240,6 @@ CREATE TABLE public.question (
 
 ALTER TABLE public.question OWNER TO "admin";
 GRANT ALL ON TABLE public.question TO admin;
-
-
--- public.form_questions definition
-
--- Drop table
-
--- DROP TABLE public.form_questions;
-
-CREATE TABLE public.form_questions (
-	form_id int4 NOT NULL,
-	question_id int4 NOT NULL,
-	CONSTRAINT form_questions_pk PRIMARY KEY (form_id, question_id),
-	CONSTRAINT form_questions_fk FOREIGN KEY (form_id) REFERENCES public.form(id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT form_questions_fk_1 FOREIGN KEY (question_id) REFERENCES public.question(id) ON DELETE SET NULL ON UPDATE SET NULL
-);
-
--- Permissions
-
-ALTER TABLE public.form_questions OWNER TO "admin";
-GRANT ALL ON TABLE public.form_questions TO admin;
 
 
 -- public.question_objective_answers definition
@@ -203,6 +290,26 @@ ALTER TABLE public.student OWNER TO "admin";
 GRANT ALL ON TABLE public.student TO admin;
 
 
+-- public.form_questions definition
+
+-- Drop table
+
+-- DROP TABLE public.form_questions;
+
+CREATE TABLE public.form_questions (
+	form_id int4 NOT NULL,
+	question_id int4 NOT NULL,
+	CONSTRAINT form_questions_pk PRIMARY KEY (form_id, question_id),
+	CONSTRAINT form_questions_fk FOREIGN KEY (form_id) REFERENCES public.form(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT form_questions_fk_1 FOREIGN KEY (question_id) REFERENCES public.question(id) ON DELETE SET NULL ON UPDATE SET NULL
+);
+
+-- Permissions
+
+ALTER TABLE public.form_questions OWNER TO "admin";
+GRANT ALL ON TABLE public.form_questions TO admin;
+
+
 -- public.question_answared_by_student definition
 
 -- Drop table
@@ -212,11 +319,10 @@ GRANT ALL ON TABLE public.student TO admin;
 CREATE TABLE public.question_answared_by_student (
 	question_id int4 NOT NULL,
 	student_user_id int4 NOT NULL,
-	id int4 NOT NULL,
 	objective_answer_id int4 NULL,
-	answer_html_content varchar(8000) NOT NULL,
+	answer_html_content varchar(8000) NOT NULL DEFAULT ''::character varying,
 	points int4 NOT NULL DEFAULT 0,
-	CONSTRAINT question_answared_by_user_pk PRIMARY KEY (id),
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	CONSTRAINT question_answared_by_student_fk_1 FOREIGN KEY (objective_answer_id) REFERENCES public.objective_answer(id) ON DELETE SET NULL ON UPDATE SET NULL,
 	CONSTRAINT question_answared_by_student_question_fk FOREIGN KEY (question_id) REFERENCES public.question(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT question_answared_by_student_user_id_fk FOREIGN KEY (student_user_id) REFERENCES public.student(user_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -250,21 +356,15 @@ GRANT ALL ON TABLE public.question_blocked_to_student TO admin;
 
 
 
-
--- Permissions
-
-GRANT ALL ON SCHEMA public TO admin;
-GRANT ALL ON SCHEMA public TO public;
-
-
 CREATE OR REPLACE FUNCTION public.function_trigger_user_answer_objective_question()
-	RETURNS trigger
-AS $function_trigger_user_answer_objective_question$
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
 	BEGIN
 		if old.objective_answer_id is not null then
-			update public.question_answared_by_student qas
-			set qas.points = (case when (curr_answer.is_correct = true) then curr_answer.max_points else 0 end),
-				qas.answer_html_content = curr_answer.html_content
+			update public.question_answared_by_student
+			set points = (case when (curr_answer.is_correct = true) then curr_answer.max_points else 0 end),
+				answer_html_content = curr_answer.html_content
 			from (
 				select qoa.is_correct, q.max_points, oa.html_content 
 				from public.question_objective_answers qoa
@@ -279,23 +379,21 @@ AS $function_trigger_user_answer_objective_question$
 					and t."name" = 'Questão Objetiva' 
 			) as curr_answer;
 		end if;
+		return old;
 	END;
-$function_trigger_user_answer_objective_question$ LANGUAGE plpgsql;
+$function$
 ;
 
 -- Permissions
 
-GRANT ALL ON FUNCTION public.function_trigger_user_answer_objective_question() TO ;
+ALTER FUNCTION public.function_trigger_user_answer_objective_question() OWNER TO "admin";
+GRANT ALL ON FUNCTION public.function_trigger_user_answer_objective_question() TO admin;
 
--- Table Triggers
 
-create trigger trigger_user_answer_objective_question after
-insert
-    or
-update
-    on
-    public.question_answared_by_student for each row execute function function_trigger_user_answer_objective_question();
+-- Permissions
 
+GRANT ALL ON SCHEMA public TO admin;
+GRANT ALL ON SCHEMA public TO public;
 
 -- data insertion
 
