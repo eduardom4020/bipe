@@ -1,0 +1,1 @@
+export const InvalidLogin = 'Login Inválido!';

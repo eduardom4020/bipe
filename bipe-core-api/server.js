@@ -5,6 +5,11 @@ import SwaggerAutogen from 'swagger-autogen';
 import ApplicationConstants from './src/application/constants';
 import DataContext from './src/infrastructure/data-contexts/postgresContext';
 
+// import CryptoJS from 'crypto-js';
+
+// console.log('Senha admin: ', CryptoJS.AES.encrypt('admin', 'G0dU$sopp').toString());
+// console.log('Senha admin: ', CryptoJS.AES.decrypt('U2FsdGVkX18ze5vAngLdrD1I7vP3lj35g13VBjKvFOY=', 'G0dU$sopp').toString(CryptoJS.enc.Utf8));
+
 DataContext.setupDataContext(
     'localhost',
     '5432',
@@ -28,10 +33,6 @@ const doc = {
 
 const outputFile = ApplicationConstants.Setup.SWAGGER_JSON_PATH;
 const endpointsFiles = [];
-
-/* NOTE: if you use the express Router, you must pass in the 
-    'endpointsFiles' only the root file where the route starts,
-    such as index.js, app.js, routes.js, ... */
 
 SwaggerGenerator(outputFile, endpointsFiles, doc)
     .then(() => {

@@ -20,4 +20,17 @@ export default class UserRepository extends PostgresRepository {
                 throw Constants.Exceptions.NotFoundException;
             });
     }
+
+    Where(condition, parameters) { 
+        const queryRes = super.Where(condition, parameters);
+
+        return queryRes
+            .then(res => {
+                const users = res.rows.map(row => User.fromDatabase(row));
+                if(users.length > 0)
+                    return users;
+                
+                throw Constants.Exceptions.NotFoundException;
+            });
+    }
 }
