@@ -1,17 +1,20 @@
-import express, { Router } from 'express';
+import express, { Router} from 'express';
 import SwaggerUi from 'swagger-ui-express';
 import SwaggerAutogen from 'swagger-autogen';
 
 import ApplicationConstants from './src/application/constants';
 import DataContext from './src/infrastructure/data-contexts/postgresContext';
 
-// import CryptoJS from 'crypto-js';
+import Controllers from './src/application/controllers';
 
-// console.log('Senha admin: ', CryptoJS.AES.encrypt('admin', 'G0dU$sopp').toString());
-// console.log('Senha admin: ', CryptoJS.AES.decrypt('U2FsdGVkX18ze5vAngLdrD1I7vP3lj35g13VBjKvFOY=', 'G0dU$sopp').toString(CryptoJS.enc.Utf8));
+import { AuthControllerRoute } from './src/application/routes/auth';
+import { FlashcardControllerRoute } from './src/application/routes/flashcard';
+import { SwaggerRoute } from './src/application/routes/apiDocs';
+
+import { Authorize } from './src/application/middlewares/auth';
 
 DataContext.setupDataContext(
-    'localhost',
+    '10.5.0.2',
     '5432',
     'bipe',
     'admin',
@@ -19,6 +22,13 @@ DataContext.setupDataContext(
 );
 
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
+
+app.use(Authorize);
 
 const SwaggerGenerator = SwaggerAutogen();
 
@@ -32,18 +42,20 @@ const doc = {
 };
 
 const outputFile = ApplicationConstants.Setup.SWAGGER_JSON_PATH;
-const endpointsFiles = [];
+const endpointsFiles = ['./server.js', './src/application/controllers/index.js'];
+
+const router = Router();
+
+app.use('/', router);
+app.use(AuthControllerRoute, Controllers.Auth);
+app.use(FlashcardControllerRoute, Controllers.Flashcard);
 
 SwaggerGenerator(outputFile, endpointsFiles, doc)
     .then(() => {
-        const router = Router();
-
         const SwaggerDocument = require(ApplicationConstants.Setup.SWAGGER_JSON_PATH);
 
-        router.use('/api-docs', SwaggerUi.serve);
-        router.get('/api-docs', SwaggerUi.setup(SwaggerDocument));
-
-        app.use('/', router);
+        router.use(SwaggerRoute, SwaggerUi.serve);
+        router.get(SwaggerRoute, SwaggerUi.setup(SwaggerDocument));
 
         app.listen(ApplicationConstants.Setup.PORT, ApplicationConstants.Setup.HOST, (error) => {
             if(error) console.log(`Error in server setup: ${error.toString()}`);

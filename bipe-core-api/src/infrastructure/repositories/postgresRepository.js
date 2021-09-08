@@ -28,7 +28,16 @@ export default class PostgresRepository extends AbstractRepository {
                 from ${this.tableName}
                 where ${condition}
             `, 
-            [parameters],
+            parameters,
+            res,
+            rej    
+        ));
+    }
+
+    Query(queryStr, parameters) { 
+        return new Promise((res, rej) => DataContext.query(
+            queryStr, 
+            parameters,
             res,
             rej    
         ));

@@ -13,7 +13,7 @@ export const ExtractUserAndPasswordFromLogin = (secrets) => {
 };
 
 export const GetAuthInfoByUsernameAndPassword = async (username, encryptedPassword) => {
-    const condition = 'username = $1::string and password = $2::string';
+    const condition = 'username = $1::varchar(50) and password = $2::varchar(1000)';
     const parameters = [username, encryptedPassword];
 
     const users = await UserRepository.Where(condition, parameters);
@@ -40,7 +40,7 @@ export const GetAuthInfoByUserIdActiveOnly = async (userId) => {
 
 export const GenerateAuthTokenUserId = userId => {
     const token = JWT.sign({ id: userId }, Constants.Security.JWTSecret, {
-        expiresIn: 300 // expires in 5min
+        expiresIn: 300 // 5 minutos
     });
 
     return token;
@@ -51,13 +51,29 @@ export const AuthorizeTokenUserId = token => new Promise((res, rej) =>
         token, 
         Constants.Security.JWTSecret, 
         (err, decoded) => {
-            if (err)
-                rej(`${Constants.Exceptions.AuthorizationFailed} | ${err}`);
+            const errTokenExpired = err && err.name === 'TokenExpiredError';
+
+            if(errTokenExpired)
+                rej({
+                    message: Constants.Exceptions.TokenExpired,
+                    error: err,
+                    tokenExpired: true
+                });
+            else if (err)
+                rej({
+                    message: Constants.Exceptions.AuthorizationFailed,
+                    error: err,
+                    tokenExpired: false
+                });
             
             const user = GetAuthInfoByUserIdActiveOnly(decoded.id);
 
             if(!user)
-                rej(Constants.Exceptions.AuthorizationFailed);
+                rej({
+                    message: Constants.Exceptions.AuthorizationFailed,
+                    error: err,
+                    tokenExpired: false
+                });
 
             res(user);
         }

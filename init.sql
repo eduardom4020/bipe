@@ -412,8 +412,8 @@ INSERT INTO public.tier ("name") VALUES
 	 ('Brabo'),
 	 ('Jedi');
 
-INSERT INTO public."user" (username,created_at,"password",is_active) VALUES
-	 ('admin','2021-09-03','admin',true);
+INSERT INTO public."user" (username,"password",is_active) VALUES
+	 ('admin', 'U2FsdGVkX18ze5vAngLdrD1I7vP3lj35g13VBjKvFOY=',true);
 
 INSERT INTO public.student (user_id,"name",nickname,social_name,grade_id,total_points,current_points,tier_id) VALUES
 	 (1,'Adminilson',NULL,NULL,1,0,0,1);

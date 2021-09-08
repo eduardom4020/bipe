@@ -1,6 +1,8 @@
+import DTO from './DTO';
+
 import {GetDisplayName} from '../services/studentServices';
 
-export default class StudentDTO {
+export default class StudentDTO extends DTO {
 
   constructor(
     name,

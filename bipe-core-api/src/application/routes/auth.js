@@ -1,1 +1,3 @@
-export const LoginRoute = '/login'
+export const AuthControllerRoute = '/auth';
+
+export const LoginRoute = '/login';

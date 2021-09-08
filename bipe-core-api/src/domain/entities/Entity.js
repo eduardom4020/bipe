@@ -1,7 +1,7 @@
 import Constants from '../constants';
 
 export default class Entity {
-    constructor(id) {
+    constructor(id=null) {
         this.id = id;
     }
 

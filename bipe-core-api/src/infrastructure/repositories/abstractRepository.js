@@ -8,7 +8,7 @@ export default class AbstractRepository {
     GetById(id) { throw Constants.Exceptions.AbstractMethodException }
     GetAll() { throw Constants.Exceptions.AbstractMethodException }
     Where(condition, parameters) { throw Constants.Exceptions.AbstractMethodException }
-    Query(queryStr) { throw Constants.Exceptions.AbstractMethodException }
+    Query(queryStr, parameters) { throw Constants.Exceptions.AbstractMethodException }
     
     Add(entity) { throw Constants.Exceptions.AbstractMethodException }
     Delete(entity) { throw Constants.Exceptions.AbstractMethodException }

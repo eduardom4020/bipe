@@ -2,3 +2,4 @@ export const AbstractMethodException = 'This method belongs to an abstract class
 export const NotFoundException = 'Entry not found.';
 export const UnableToCastException = 'Unable to convert a class to another.';
 export const AuthorizationFailed = "The provided token is unable to authorize user's access.";
+export const TokenExpired = "The provided token was expired.";
