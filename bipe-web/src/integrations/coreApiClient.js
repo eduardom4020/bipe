@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 
 import Constants from '../constants';
 
-localStorage.token = null;
+let Token = null;
 
 const CoreApiClient = axios.create({
     baseURL: 'http://localhost:3000',
@@ -26,7 +26,7 @@ const Login = (username, password) => {
             const { token } = res.data;
 
             if(token)
-                localStorage.token = token;
+                Token = token;
 
             return {token};
         })
@@ -36,7 +36,7 @@ const Login = (username, password) => {
 }
 
 const NextFlashcard = () => {
-    return CoreApiClient.get('/flashcard/next', { headers: { "x-access-token": localStorage.token } })
+    return CoreApiClient.get('/flashcard/next', { headers: { "x-access-token": Token } })
         .then(res => {
             const { question } = res.data;
             return { question };
@@ -50,7 +50,7 @@ const AnswerFlashcard = (questionId, answerId) => {
     return CoreApiClient.post(
         '/flashcard/answer', 
         { questionId, answerId },
-        { headers: { "x-access-token": localStorage.token } }
+        { headers: { "x-access-token": Token } }
     )
         .then(res => {
             const { result } = res.data;
@@ -61,10 +61,10 @@ const AnswerFlashcard = (questionId, answerId) => {
         });
 }
 
-window.CoreApiTest = {};
-window.CoreApiTest.Login = Login;
-window.CoreApiTest.NextFlashcard = NextFlashcard;
-window.CoreApiTest.AnswerFlashcard = AnswerFlashcard;
+// window.CoreApiTest = {};
+// window.CoreApiTest.Login = Login;
+// window.CoreApiTest.NextFlashcard = NextFlashcard;
+// window.CoreApiTest.AnswerFlashcard = AnswerFlashcard;
 
 export default {
     Login,
