@@ -13,6 +13,8 @@ import { SwaggerRoute } from './src/application/routes/apiDocs';
 
 import { Authorize } from './src/application/middlewares/auth';
 
+import cors from 'cors';
+
 DataContext.setupDataContext(
     '10.5.0.2',
     '5432',
@@ -22,6 +24,14 @@ DataContext.setupDataContext(
 );
 
 const app = express();
+// app.use((_, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding, Access-Control-Allow-Origin, Access-Control-Allow-Methods, x-access-token, Access-Control-Allow-Headers, Referer, sec-ch-ua, sec-ch-ua-mobile, sec-ch-ua-platform, User-Agent");
+//     next();
+// });
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({

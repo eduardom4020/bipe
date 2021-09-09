@@ -1,2 +1,2 @@
-export const CryptographySecret = 'G0dU$sopp';
+export const CryptographySecret = 'AGrandeChaveDeTestes';
 export const JWTSecret = 'S0meV3ryHard5eCret';

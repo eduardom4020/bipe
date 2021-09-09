@@ -34,17 +34,19 @@ export const AnswerQuestion = async (questionId, answerId) => {
 
     let points = 0;
     let correctAnswerContent = null;
+    let explanation = null;
 
     if(answer.isCorrect) {
         const question = await QuestionRepository.GetById(questionId);
         points = question.maxPoints;
         correctAnswerContent = answer.content;
+        explanation = 'Resposta da Questão!';
     }
     
 
     const questionResult = new QuestionResultDTO(
         answer.isCorrect,
-        'Resposta da Questão!',
+        explanation,
         points,
         correctAnswerContent
     );

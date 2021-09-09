@@ -49,7 +49,7 @@ export const UserLoginMiddleware = async (req, res, next) => {
 
     try {
         const authData = AuthServices.ExtractUserAndPasswordFromLogin(req.body.secrets);
-        const user = await AuthServices.GetAuthInfoByUsernameAndPasswordActiveOnly(authData.username, authData.encryptedPassword);
+        const user = await AuthServices.GetAuthInfoByUsernameAndPasswordActiveOnly(authData.username, authData.password);
 
         if(user) {
             user.currentToken = AuthServices.GenerateAuthTokenUserId(user.id);

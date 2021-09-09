@@ -7,23 +7,23 @@ import UserAuthDTO from '../DTOs/UserAuthDTO';
 
 export const ExtractUserAndPasswordFromLogin = (secrets) => {
     const loginEncryptedData = CryptoJS.AES.decrypt(secrets, Constants.Security.CryptographySecret).toString(CryptoJS.enc.Utf8);
-    const { username, encryptedPassword } = JSON.parse(loginEncryptedData);
-
-    return { username, encryptedPassword };
+    const { username, password } = JSON.parse(loginEncryptedData);
+    
+    return { username, password };
 };
 
-export const GetAuthInfoByUsernameAndPassword = async (username, encryptedPassword) => {
+export const GetAuthInfoByUsernameAndPassword = async (username, password) => {
     const condition = 'username = $1::varchar(50) and password = $2::varchar(1000)';
-    const parameters = [username, encryptedPassword];
-
+    const parameters = [username, password];
+    
     const users = await UserRepository.Where(condition, parameters);
     
     if(users.length > 0)
         return UserAuthDTO.fromEntity(users[0]);
 }
 
-export const GetAuthInfoByUsernameAndPasswordActiveOnly = async (username, encryptedPassword) => {
-    const authInfoDto = await GetAuthInfoByUsernameAndPassword(username, encryptedPassword);
+export const GetAuthInfoByUsernameAndPasswordActiveOnly = async (username, password) => {
+    const authInfoDto = await GetAuthInfoByUsernameAndPassword(username, password);
 
     if(authInfoDto.isActive)
         return authInfoDto;
