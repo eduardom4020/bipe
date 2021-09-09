@@ -12,6 +12,7 @@ export default class QuestionDTO extends DTO {
         this.content = null;
         this.type = null;
         this.maxPoints = false;
+        this.answers = null;
     }
 
     static fromEntity(entity) {
@@ -21,6 +22,7 @@ export default class QuestionDTO extends DTO {
             question.content = entity.content;
             question.type = entity.Type;
             question.maxPoints = entity.maxPoints;
+            question.answers = entity.AnswersOptions;
             
             return question;
         }

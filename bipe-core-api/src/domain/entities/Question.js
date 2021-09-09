@@ -1,5 +1,5 @@
 import Entity from './Entity';
-import { QuestionTypeRepository } from '../../infrastructure';
+import { QuestionTypeRepository, ObjectiveAnswerRepository } from '../../infrastructure';
 
 export default class Question extends Entity {
 
@@ -18,6 +18,7 @@ export default class Question extends Entity {
         this.label = label;
 
         this.Type = null;
+        this.AnswersOptions = null;
     }
 
     static fromDatabase(question) {
@@ -41,5 +42,15 @@ export default class Question extends Entity {
             console.log('Unable to load question type.', ex);
         }
 
+    }
+
+    async loadAnswers() {
+        try {
+            this.AnswersOptions = await ObjectiveAnswerRepository.GetAnswersOptionsFromQuestionId(this.id);
+            return this;
+        }
+        catch(ex) {
+            console.log('Unable to load question answers options.', ex);
+        }
     }
 }

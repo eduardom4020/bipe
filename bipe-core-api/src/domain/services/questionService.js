@@ -4,8 +4,9 @@ import QuestionDTO from "../DTOs/QuestionDTO";
 
 export const GetRandomQuestionsLimiting = async limit => {
     const questions = await QuestionRepository.PickRandomLimiting(limit);
-    const questionsTyped = await Promise.all(questions.map(x => x.loadType()));
-    const questionsDto = questionsTyped.map(x => QuestionDTO.fromEntity(x));
+    const questionsWithType = await Promise.all(questions.map(x => x.loadType()));
+    const questionsWithTypeAnswer = await Promise.all(questionsWithType.map(x => x.loadAnswers()));
+    const questionsDto = questionsWithTypeAnswer.map(x => QuestionDTO.fromEntity(x));
 
     return questionsDto;
 }

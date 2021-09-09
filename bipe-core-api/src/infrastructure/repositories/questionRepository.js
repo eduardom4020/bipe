@@ -1,6 +1,7 @@
 import PostgresRepository from "./postgresRepository";
 import Question from '../../domain/entities/Question';
 import Constants from '../constants';
+import ObjectiveAnswer from "../../domain/entities/ObjectiveAnswer";
 
 export default class QuestionRepository extends PostgresRepository {
     constructor() {
