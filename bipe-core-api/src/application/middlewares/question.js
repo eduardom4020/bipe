@@ -17,3 +17,20 @@ export const GetNextQuestionMiddleware = async (_, res, next) => {
 
     next();
 }
+
+export const AnswerQuestionMiddleware = async (req, res, next) => {
+    try {
+        const { questionId, answerId } = req.body;
+        const result = await QuestionServices.AnswerQuestion(questionId, answerId);
+        
+        if(result)
+            res.locals.result = result;
+        else 
+            res.locals.errorType = Constants.ErrorTypeEnum.NotFound;
+    } catch(ex) {
+        res.locals.error = { errorMessage: ex.toString() };
+        res.locals.errorType = Constants.ErrorTypeEnum.Unexpected;
+    }
+
+    next();
+}

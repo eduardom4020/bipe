@@ -1,6 +1,7 @@
-import { QuestionRepository } from "../../infrastructure";
+import { QuestionRepository, ObjectiveAnswerRepository } from "../../infrastructure";
 import Constants from '../constants';
 import QuestionDTO from "../DTOs/QuestionDTO";
+import QuestionResultDTO from "../DTOs/QuestionResultDTO";
 
 export const GetRandomQuestionsLimiting = async limit => {
     const questions = await QuestionRepository.PickRandomLimiting(limit);
@@ -26,4 +27,27 @@ export const GetRandomObjectiveQuestion = async () => {
         return question;
 
     throw Constants.Exceptions.NotFoundException;
+}
+
+export const AnswerQuestion = async (questionId, answerId) => {
+    const answer = await ObjectiveAnswerRepository.GetAnswerOfQuestion(questionId, answerId);
+
+    let points = 0;
+    let correctAnswerContent = null;
+
+    if(answer.isCorrect) {
+        const question = await QuestionRepository.GetById(questionId);
+        points = question.maxPoints;
+        correctAnswerContent = answer.content;
+    }
+    
+
+    const questionResult = new QuestionResultDTO(
+        answer.isCorrect,
+        'Resposta da Questão!',
+        points,
+        correctAnswerContent
+    );
+
+    return questionResult;
 }

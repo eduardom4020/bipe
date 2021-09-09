@@ -43,4 +43,28 @@ export default class ObjectiveAnswerRepository extends PostgresRepository {
                 throw Constants.Exceptions.NotFoundException;
             });
     }
+
+    GetAnswerOfQuestion(questionId, answerId) {
+        const query = `
+            select oa.*, qoa.is_correct 
+            from question_objective_answers qoa 
+            inner join question q 
+                on qoa.question_id = q.id
+            inner join objective_answer oa 
+                on qoa.objective_answer_id = oa.id
+            where q.id = $1::int
+                and oa.id = $2::int
+        `;
+
+        const queryRes = super.Query(query, [questionId, answerId]);
+
+        return queryRes
+            .then(res => {
+                const answersOptions = res.rows.map(row => ObjectiveAnswer.fromDatabase(row));
+                if(answersOptions.length > 0)
+                    return answersOptions[0];
+                
+                throw Constants.Exceptions.NotFoundException;
+            });
+    }
 }
